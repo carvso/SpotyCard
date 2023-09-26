@@ -479,9 +479,12 @@ button{
     }
     .hero .mockup{
         position: absolute;
-        top: 25em;
-        right: -19em;
+        top: 39em;
+        right: 0em;
         z-index: -2;
+        width: 80vw;
+        height: 28vh;
+        overflow-x: hidden;
     }
     .hero .mockup-bg{
         width: 10rem;
