@@ -176,6 +176,9 @@ document.querySelector(`.getartist`).addEventListener('submit', function (event)
         console.log("miao");
         artistNameElement.style.left = "-4em";
       }
+      //set link
+      const artistProfileLink = document.querySelector(".profile-link");
+      artistProfileLink.href = artisti.items[0].external_urls.spotify;
       //set followers
       artistFollowElement.textContent = artisti.items[0].followers.total.toLocaleString();
 
