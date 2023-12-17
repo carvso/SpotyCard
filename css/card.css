@@ -55,26 +55,17 @@ span{
     font-size: 1rem;
     line-height: 155%;
     margin-bottom: 2rem;
+    color: hwb(0 100% 0% / 0.673);
 }
 .hero .mockup{
-    width: 50rem;
-    height: 35rem;
-    position: relative;
-    right: 15em;
-    bottom: 3em;
-    margin-left: 15em;
-    z-index: 3;
-    overflow-x: hidden;
-}
-.hero .mockup-bg{
-    width: 40rem;
-    height: 30rem;
+    width: 1000px;
+    height: 900px;
     position: absolute;
-    right: 7em;
-    bottom: 3em;
+    right: -7em;
+    bottom: -5em;
     margin-left: 15em;
-    z-index: 1;
-    animation: slide-right-left 2s infinite;
+    z-index: -1;
+    overflow-x: hidden;
 }
 @keyframes slide-right-left {
     0% {
