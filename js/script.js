@@ -52,7 +52,10 @@ async function getTracks(artistId) {
   const tracks = dataTopTracks.tracks;
   return tracks;
 }
-
+//Funzione per trimmare tutte le canzoni che superano gli 11 caratteri
+function trimToMaxLength(str, maxLength) {
+  return str.length > maxLength ? str.substring(0, maxLength) : str;
+}
 // Funzione per cercare gli artisti tramite l'API Spotify
 async function cercareArtisti() {
   // Crea una stringa con gli ID degli artisti
@@ -103,13 +106,13 @@ async function cercareArtisti() {
         thirdSongImg.setAttribute("src", tracksObj[2].album.images[0].url);
         //text set
         const firstSongTxt = document.querySelector(`#song-fi-${index + 1}`);
-        firstSongTxt.textContent = tracksObj[0].name.replace(/\(.*?\)/g, "");
+        firstSongTxt.textContent = trimToMaxLength(tracksObj[0].name, 11);
 
         const secondSongTxt = document.querySelector(`#song-sec-${index + 1}`);
-        secondSongTxt.textContent = tracksObj[1].name.replace(/\(.*?\)/g, "").trim();
+        secondSongTxt.textContent = trimToMaxLength(tracksObj[1].name, 11);
 
         const thirdSongTxt = document.querySelector(`#song-thi-${index + 1}`);
-        thirdSongTxt.textContent = tracksObj[2].name.replace(/\(.*?\)/g, "").trim();
+        thirdSongTxt.textContent = trimToMaxLength(tracksObj[2].name, 11);
         //duration set
         const firstSongTime = document.querySelector(`#duration-fi-${index + 1}`);
         firstSongms = tracksObj[0].duration_ms;
@@ -202,13 +205,13 @@ document.querySelector(`.getartist`).addEventListener('submit', function (event)
         thirdSongImg.setAttribute("src", tracks[2].album.images[0].url);
         //text set
         const firstSongTxt = document.querySelector(`#song-fi-searched`);
-        firstSongTxt.textContent = tracks[0].name.replace(/\(.*?\)/g, "");
+        firstSongTxt.textContent = trimToMaxLength(tracks[0].name, 11);
 
         const secondSongTxt = document.querySelector(`#song-sec-searched`);
-        secondSongTxt.textContent = tracks[1].name.replace(/\(.*?\)/g, "").replace(/-.*/, "").trim();
+        secondSongTxt.textContent = trimToMaxLength(tracks[1].name, 11);
 
         const thirdSongTxt = document.querySelector(`#song-thi-searched`);
-        thirdSongTxt.textContent = tracks[2].name.replace(/\(.*?\)/g, "").replace(/-.*/, "").trim();
+        thirdSongTxt.textContent = trimToMaxLength(tracks [2].name, 11);
         //duration set
         const firstSongTime = document.querySelector(`#duration-fi-searched`);
         firstSongms = tracks[0].duration_ms;

@@ -4,11 +4,14 @@
 body {
     padding: 0;
     margin: 0 5em;
-    background-image: url(./img/BG.jpeg);
-    background-size: cover;
+    background: rgb(23,27,39);
+    background: linear-gradient(90deg, rgba(23,27,39,1) 16%, rgba(137,96,142,1) 100%);
     color: #2f4858;
     font-family: 'Poppins', sans-serif;
     overflow-x: hidden;
+}
+:root{
+    --bgColor: #171B27;
 }
 html{
     scroll-behavior: smooth;
@@ -37,6 +40,9 @@ span{
 }
 .logo{
     display: flex;
+}
+.logo-txt{
+    font-size: 1.7rem;
 }
 .hero{
     display: flex;
@@ -97,6 +103,12 @@ span{
     outline: none;
     transition: transform 0.3s ease-in-out;
     display: inline-block;
+}
+.btn > a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5em;
 }
 .btn:hover {
     transform: translateY(-10px);
@@ -317,12 +329,13 @@ span{
 .song-list {
     display: flex;
     flex-direction: column;
-    gap: 0.7em;
-    position: relative;
+    justify-content: center;
+    gap: 1.7em;
+    flex-wrap: wrap;
+    /* position: relative;
     top: 1em;
-    width: 10em;
-  }
-  
+    width: 10em; */
+}  
 .song-list h3 {
     font-size: 1.1rem;
     color: #7a7a8c;
@@ -330,32 +343,39 @@ span{
 }
 .songs{
     display: flex;
+    justify-content: center;
+    text-align: left;
     gap: 0.5em;
     position: relative;
     bottom: 5em;
-    left: 1em;
 }
 .song-img{
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5em;
-    
+    gap: 1em;
+}
+.song-img img{
+    border-radius: .2em;
 }
 .song-duration{
     display: flex;
     flex-direction: column;
     font-size: 0.7rem;
+    position: relative;
+    gap: .3em;
+    top: .7em;
+    left: .5em;
     color: #A1A1AE;
-    margin: 0;
 }
 .song-boxi{
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 2em;
     position: relative;
-    top: 0.8em;
-    
+    top: 1.3em; 
+    left: .5em;
 }
 .first-song{
     /* margin-bottom: 0.3em; */
@@ -426,12 +446,24 @@ button{
     animation: up-and-down 2s infinite;
 }
 .made{
-    height: 350px;
+    height: 370px;
     width: 300px;
     position: relative;
     top: 0;
     left: 47%;
     display: none;
+}
+.made .song-boxi{
+    position: relative;
+    gap: 2.3em;
+    top: 1em; 
+    left: .5em;
+}
+.made .song-duration{
+    position: relative;
+    gap: .5em;
+    top: .2em;
+    left: .5em;
 }
 .artist-name-searched{
     position: relative;
@@ -493,8 +525,6 @@ button{
     }
     .hero-content h4{
         font-size: 4rem;
-    }
-    .card-list{
     }
     header svg{
         position: absolute;
