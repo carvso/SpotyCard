@@ -67,9 +67,9 @@ async function cercareArtisti() {
       Authorization: `Bearer ${accessToken}`
     }
   })
-    .catch(e => {
-      console.log(e);
-    });
+  .catch(e => {
+    console.log(e);
+  });
   const data = await response.json();
 
   // Verifica se la ricerca ha restituito risultati

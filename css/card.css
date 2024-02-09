@@ -3,7 +3,8 @@
 
 body {
     padding: 0;
-    margin: 0 5em;
+    margin-left: 7em;
+    margin-right: 5em;
     background: rgb(23,27,39);
     background: linear-gradient(90deg, rgba(23,27,39,1) 16%, rgba(137,96,142,1) 100%);
     color: #2f4858;
@@ -21,8 +22,7 @@ a {
 }
 header{
     display: flex;
-    justify-content: flex-start;
-    margin: 2em;    
+    justify-content: flex-start;   
 }
 header svg{
     height: 4em;
@@ -47,7 +47,6 @@ span{
 .hero{
     display: flex;
     position: relative;
-    margin-left: 3em;
 }
 .hero-img{
     position: absolute;
@@ -59,7 +58,7 @@ span{
     margin-bottom: 0;
     margin-top: 0;
     line-height: 115%;
-    width: 8em;
+    width: fit-content;
 }
 .hero p{
     font-size: 1rem;
@@ -77,6 +76,9 @@ span{
     z-index: -1;
     overflow-x: hidden;
 }
+.hero .mockup-mobile{
+    display: none;
+}
 @keyframes slide-right-left {
     0% {
       transform: translateX(0);
@@ -90,6 +92,8 @@ span{
 }
 .hero-content{
     width: 40em;
+    margin-top: 2.5em;
+    margin-bottom: 2.5em;
 }
 .btn{
     background: linear-gradient(90deg,#00c795,#009dff);
@@ -501,38 +505,27 @@ button{
     }
     body{
         color: #fff;
+        text-align: center;
     }
     .logo{
         width: 25%;
     }
     .hero .mockup{
-        position: absolute;
-        top: 39em;
-        right: 0em;
-        z-index: -2;
-        width: 80vw;
-        height: 28vh;
-        overflow-x: hidden;
+        display: none;
     }
-    .hero .mockup-bg{
-        width: 10rem;
-        height: 10rem;
-        top: 5em;
-        right: 4em;
+    .mockup-mobile{
+        display: block;
+        max-width: 100%;
     }
-    .hero-content p{
-        font-size: 1.6rem;
+    .hero-img{
+        position: relative;
+        bottom: 0;
     }
-    .hero-content h4{
-        font-size: 4rem;
+    .card-list{
+        display: none;
     }
-    header svg{
-        position: absolute;
-        top: 6em;
-        right: 6em;
-        width: 64px;
-        height: 64px;
-
+    .createcard > h4{
+        width: fit-content;
     }
     .card-header h2{
         font-size: 2.4rem;
@@ -541,7 +534,7 @@ button{
         -webkit-text-fill-color: transparent;
         -webkit-background-clip: text;
         background-clip: text;
-        width: 9em;
+        width: fit-content;
         color: #1ED760;
     }
     .card{
@@ -551,8 +544,8 @@ button{
     }
     .card-header{
         position: relative;
-        top: 0;
-        left: 7em;
+        top: 2em;
+        left: 9em;
     }
     #artist-follow-0, #artist-follow-1, #artist-follow-2, #artist-follow-3, #artist-follow-4, #artist-follow-5, #artist-follow-6{
         position: relative;
@@ -568,8 +561,8 @@ button{
     }
     .tags{
         position: relative;
-        left: 4rem;
-        top: 0em;
+        top: -3em;
+        left: 8em;
         max-width: 30em;
     }
     .tags a{
@@ -592,11 +585,6 @@ button{
     .card-list{
         display: none;
     }
-    .tags{
-        position: relative;
-        top: -5em;
-        left: 10em;
-    }
     .made .bx-group{
         position: relative;
         top: -.1em;
@@ -609,78 +597,84 @@ button{
     .song-list{
         font-size: 6rem;
         position: relative;
-        top:-0em;
+        top: 0em;
+    }
+    .song-sec-searched{
+        position: relative;
+        left: 0;
+        top: 10em;
     }
     .first-song{
         position: relative;
         font-size: 2rem;
         top: 1.4em;
     }
-    
     .made .songs{
         position: relative;
         top: -19em;
-        left: 1.5em;
+        left: 0em;
     }
     .made .cta{
         position: relative;
-        top: -9em;
+        top: -8em;
         font-size: 1.5rem;
     }
     .made .first-song{
         position: relative;
-        font-size: 2rem;
         top: 0.7em;
+        font-size: 1.5rem;
     }
     .made .second-song{
         position: relative;
-        font-size: 2rem;
-        top: -.2em;
+        font-size: 1.5rem;
+        top: .5em;
     }
     .made .last-song{
         position: relative;
-        font-size: 2rem;
-        top: -1.2em;
-    }
-    .card .first-song{
         font-size: 1.5rem;
+        top: -11.7em;
     }
-    .card .second-song{
-        font-size: 1.5rem;
+    .song-boxi{
         position: relative;
-        top: .3em;
-    }
-    .card .last-song{
-        font-size: 1.5rem;
-    }
-     .song-boxi{
-        position: relative;
-        font-size: 2em;
+        font-size: 1.5em;
         top: 1em;
         left: -2em;
         gap: 1.7em;
+    }
+    .song-boxi {
+        position: relative;
+        top: 5em;
+    }
+    .song-boxi .second-time{
+        position: relative;
+        top: 1em;
+    }
+    .song-boxi .third-time{
+        position: relative;
+        top: 1.5em;
     }
     .song-duration{
         position: relative;
         font-size: 1.5em;
         gap: 0em;
     }
-    
     .made .first-duration{
         position: relative;
-        top: .1em;
-        left: -2em;
+        font-size: 1em;
+        top: -.5em;
+        left: 0em;
     }
     .made .second-duration{
         position: relative;
-        top: -.4em;
-        left: -2em;
+        font-size: 1em;
+        top: -.3em;
+        left: 0em;
     }
-    
     .made .third-duration{
         position: relative;
-        top: -0.8em;
-        left: -2em;
+        font-size: 1em;
+        top: -.4em;
+        left: 0em;
     }
     .createcard h4{
         margin-left: auto;
@@ -718,6 +712,5 @@ button{
     }
     .header-song h4{
         font-size: 2rem;
-    }
+    } 
 }
-.ciao{height: 20em;}
