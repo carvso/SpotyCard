@@ -501,7 +501,6 @@ button{
 @media (max-width: 450px) {
     html{
         font-size: 50%;
-        overflow-x: hidden;
     }
     body{
         color: #fff;
@@ -571,10 +570,10 @@ button{
     .made{
         width: 5rem;
         height: 40rem;
-        margin-left: auto;
-        margin-right: auto;
-        left: 18em;
         display: none;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        
     }
     .made .follower{
         position: relative;
