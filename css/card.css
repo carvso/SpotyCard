@@ -573,7 +573,7 @@ button{
         display: none;
         overflow-y: hidden;
         overflow-x: hidden;
-        
+        position: relative;
     }
     .made .follower{
         position: relative;
