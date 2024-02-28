@@ -1,13 +1,11 @@
-// Inserisci gli ID degli artisti da cercare
+// Constants
 const artisti = ["4q3ewBCX7sLwd24euuV69X", "3TVXtAsR1Inumwj472S9r4", "1vCWHaC5f2uS3yhpwWbIA6", "1Xyo4u8uXC1ZmMpatF05PJ", "06HL4z0CvFAxyc27GXpf02", "6eUKZXaKkcviH0Ku9w2n3V", "5YGY8feqx7naU7z4HrwZM6"];
-// Credenziali dell'API Spotify
 const clientId = '4f0266826bda4b02a38b3339cdcb59c2';
 const clientSecret = '8d8989c32f5e4ed0a1019be04cb5fb25';
-let accessToken = "BQDuDcthIC3wCzB5h1VYBpbaZOs6TCO8n6urqNV3YJ3h64ZzNFtshide8AsIdcERDfJyxCuuLVgS9XsUqmlGdJ9q1l8lEzC_wudQGxa6h9eP_QmBJ2s";
+let accessToken = "";
 
-
-// Funzione per richiedere un nuovo access token
-function requestAccessToken() {return new Promise((resolve, reject) => {
+// Functional Helpers
+const fetchAccessToken = async () => {
   const tokenUrl = "https://accounts.spotify.com/api/token";
   const tokenData = {
     grant_type: "client_credentials",
@@ -15,147 +13,117 @@ function requestAccessToken() {return new Promise((resolve, reject) => {
     client_secret: clientSecret,
   };
 
-  fetch(tokenUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams(tokenData),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      accessToken = data.access_token;
-      console.log("Nuovo access token:", accessToken);
-      resolve();
-    })
-    .catch((error) => {
-      console.error("Errore:", error);
-      reject(error);
-    });
-});
-}
-window.onload = async function() {
   try {
-    await requestAccessToken();
-    cercareArtisti();
+    const response = await fetch(tokenUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams(tokenData),
+    });
+    const data = await response.json();
+    accessToken = data.access_token;
+    console.log("New access token:", accessToken);
   } catch (error) {
-    console.error("Failed to get access token:", error);
+    console.error("Error fetching access token:", error);
+    throw error;
   }
-}
-async function getTracks(artistId) {
-  const responseTopTracks = await fetch(`https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=it`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
-  const dataTopTracks = await responseTopTracks.json();
-  const tracks = dataTopTracks.tracks;
-  return tracks;
-}
-//Funzione per trimmare tutte le canzoni che superano gli 11 caratteri
-function trimToMaxLength(str, maxLength) {
-  return str.length > maxLength ? str.substring(0, maxLength) : str;
-}
-// Funzione per cercare gli artisti tramite l'API Spotify
-async function cercareArtisti() {
-  // Crea una stringa con gli ID degli artisti
-  const ids = artisti.join(',');
+};
 
-  // Effettua la richiesta GET all'API Spotify per cercare gli artisti
+const fetchArtists = async () => {
+  const ids = artisti.join(',');
   const response = await fetch(`https://api.spotify.com/v1/artists?ids=${ids}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`
     }
-  })
-  .catch(e => {
-    console.log(e);
+  });
+  return response.json();
+};
+
+const fetchTopTracks = async (artistId) => {
+  const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=it`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
   });
   const data = await response.json();
+  return data.tracks;
+};
 
-  // Verifica se la ricerca ha restituito risultati
-  if (data.artists) {
-    // Itera sui risultati della ricerca e stampa il nome e il genere di ciascun artista
-    data.artists.forEach((artista, index) => {
-      console.log(`Nome: ${artista.name}, Genere: ${artista.genres[0]}, Follower: ${artista.followers.total}, Url: ${artista.images[0].url}`);
+const trimToMaxLength = (str, maxLength) => str.length > maxLength ? str.substring(0, maxLength) : str;
 
-      const artistNameElement = document.querySelector(`#artist-name-${index + 1}`);
-      console.log(artistNameElement);
-      artistNameElement.textContent = artista.name;
+const printName = (elementId, name) => {
+  const element = document.querySelector(`#${elementId}`);
+  element.textContent = name !== undefined ? name : "N/D";
+};
 
-      const artistGenreElement = document.querySelector(`#artist-genre-${index + 1}`);
-      artistGenreElement.textContent = `${artista.genres[0]}`;
+const printFollowers = (elementId, count) => {
+  const element = document.querySelector(`#${elementId}`);
+  element.textContent = count !== undefined ? count.toLocaleString() : "N/D";
+};
 
-      const artistFollowElement = document.querySelector(`#artist-follow-${index + 1}`);
-      artistFollowElement.textContent = artista.followers.total.toLocaleString();
+const setArtistImage = (elementId, url) => {
+  const element = document.querySelector(`#${elementId}`);
+  element.setAttribute("src", url);
+};
 
-      const artistImgElement = document.querySelector(`#artist-img-${index + 1}`);
-      artistImgElement.setAttribute("src", artista.images[0].url);
-      //set top3 songs
-      const artistaId = artista.id;
-      const tracks = getTracks(artistaId);
+const printSongInfo = (elementId, text) => {
+  const element = document.querySelector(`#${elementId}`);
+  element.textContent = text !== undefined ? text : "N/D";
+};
 
-      tracks.then(tracksObj => {
-        //console.log(tracksObj[0])
-        const firstSongImg = document.querySelector(`#album-fi-${index + 1}`);
-        firstSongImg.setAttribute("src", tracksObj[0].album.images[0].url);
+const printSongDuration = (elementId, ms) => {
+  const element = document.querySelector(`#${elementId}`);
+  element.textContent = ms !== undefined ? new Date(ms).toISOString().slice(15, 19) : "N/D";
+};
 
-        const secondSongImg = document.querySelector(`#album-sec-${index + 1}`);
-        secondSongImg.setAttribute("src", tracksObj[1].album.images[0].url);
+// Main Functions
+const fetchAndPrintArtists = async () => {
+  try {
+    await fetchAccessToken();
+    const data = await fetchArtists();
 
-        const thirdSongImg = document.querySelector(`#album-thi-${index + 1}`);
-        thirdSongImg.setAttribute("src", tracksObj[2].album.images[0].url);
-        //text set
-        const firstSongTxt = document.querySelector(`#song-fi-${index + 1}`);
-        firstSongTxt.textContent = trimToMaxLength(tracksObj[0].name, 11);
+    if (data.artists) {
+      data.artists.forEach(async (artist, index) => {
+        printName(`artist-name-${index + 1}`, artist.name);
+        printName(`artist-genre-${index + 1}`, artist.genres[0]);
+        printFollowers(`artist-follow-${index + 1}`, artist.followers.total);
+        setArtistImage(`artist-img-${index + 1}`, artist.images[0].url);
 
-        const secondSongTxt = document.querySelector(`#song-sec-${index + 1}`);
-        secondSongTxt.textContent = trimToMaxLength(tracksObj[1].name, 11);
+        const tracks = await fetchTopTracks(artist.id);
 
-        const thirdSongTxt = document.querySelector(`#song-thi-${index + 1}`);
-        thirdSongTxt.textContent = trimToMaxLength(tracksObj[2].name, 11);
-        //duration set
-        const firstSongTime = document.querySelector(`#duration-fi-${index + 1}`);
-        firstSongms = tracksObj[0].duration_ms;
-        firstSongTime.textContent = new Date(firstSongms).toISOString().slice(15, 19);
+        setArtistImage(`album-fi-${index + 1}`, tracks[0].album.images[0].url);
+        setArtistImage(`album-sec-${index + 1}`, tracks[1].album.images[0].url);
+        setArtistImage(`album-thi-${index + 1}`, tracks[2].album.images[0].url);
 
-        const secondSongTime = document.querySelector(`#duration-sec-${index + 1}`);
-        secondSongms = tracksObj[1].duration_ms;
-        secondSongTime.textContent = new Date(secondSongms).toISOString().slice(15, 19);
+        printSongInfo(`song-fi-${index + 1}`, trimToMaxLength(tracks[0].name, 11));
+        printSongInfo(`song-sec-${index + 1}`, trimToMaxLength(tracks[1].name, 11));
+        printSongInfo(`song-thi-${index + 1}`, trimToMaxLength(tracks[2].name, 11));
 
-        const thirdSongTime = document.querySelector(`#duration-thi-${index + 1}`);
-        thirdSongms = tracksObj[2].duration_ms;
-        thirdSongTime.textContent = new Date(thirdSongms).toISOString().slice(15, 19);
-
+        printSongDuration(`duration-fi-${index + 1}`, tracks[0].duration_ms);
+        printSongDuration(`duration-sec-${index + 1}`, tracks[1].duration_ms);
+        printSongDuration(`duration-thi-${index + 1}`, tracks[2].duration_ms);
       });
-
-    });
-  } else {
-    console.log('Nessun artista trovato');
-    requestAccessToken();
+    } else {
+      console.log('No artists found');
+      await fetchAccessToken();
+    }
+  } catch (error) {
+    console.error("Failed to fetch artists:", error);
   }
-}
+};
 
-// Richiesta iniziale per ottenere un access token
-requestAccessToken();
-
-// Richiesta per cercare gli artisti con il nuovo access token
-cercareArtisti();
-
-//Prende il nome dal form
-document.querySelector(`.getartist`).addEventListener('submit', function (event) {
-  event.preventDefault();
-
+const searchArtist = async () => {
   const artistNameElement = document.querySelector(`#artist-name-searched`);
   artistNameElement.style.left = "";
 
   const card = document.querySelector(`.made`);
   card.style.display = "flex";
-  //prende i valori dal form
+
   const artistNameRaw = document.querySelector(`.src`).value;
   const artistName = artistNameRaw.replace(/ /g, "+");
-  console.log(artistName);
 
-  async function getSearchedArtist() {
+  try {
     const response = await fetch(`https://api.spotify.com/v1/search?q=${artistName}&type=artist&market=IT&limit=1`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
@@ -163,72 +131,37 @@ document.querySelector(`.getartist`).addEventListener('submit', function (event)
     });
 
     const data = await response.json();
-    const artisti = data.artists;
+    const artist = data.artists.items[0];
 
-    if (artisti) {
-      //set nome
-      artistNameElement.textContent = artisti.items[0].name;
+    if (artist) {
+      printName('artist-name-searched', artist.name);
+      printName('artist-genre-searched', artist.genres[0]);
+      printFollowers('artist-follow-searched', artist.followers.total);
+      setArtistImage('artist-img-searched', artist.images[0].url);
 
-      const artistGenreElement = document.querySelector(`#artist-genre-searched`);
-      artistGenreElement.textContent = artisti.items[0].genres[0];
+      const tracks = await fetchTopTracks(artist.id);
 
-      const artistFollowElement = document.querySelector(`#artist-follow-searched`);
-      console.log(artisti.items[0].followers.total);
+      printSongInfo('song-fi-searched', trimToMaxLength(tracks[0].name, 11));
+      printSongInfo('song-sec-searched', trimToMaxLength(tracks[1].name, 11));
+      printSongInfo('song-thi-searched', trimToMaxLength(tracks[2].name, 11));
 
-      if (artisti.items[0].followers.total < 1000000) {
-        console.log("miao");
-        artistNameElement.style.left = "-4em";
-      }
-      //set link
-      const artistProfileLink = document.querySelector(".profile-link");
-      artistProfileLink.href = artisti.items[0].external_urls.spotify;
-      //set followers
-      artistFollowElement.textContent = artisti.items[0].followers.total.toLocaleString();
+      printSongDuration('duration-fi-searched', tracks[0].duration_ms);
+      printSongDuration('duration-sec-searched', tracks[1].duration_ms);
+      printSongDuration('duration-thi-searched', tracks[2].duration_ms);
+    }
+  } catch (error) {
+    console.error("Failed to search for artist:", error);
+  }
+};
 
-      const artistImgElement = document.querySelector(`#artist-img-searched`);
-      console.log(artisti.items[0].images[0].url);
-      artistImgElement.setAttribute("src", artisti.items[0].images[0].url);
-
-      //top 3 songs
-      const artistId = artisti.items[0].id;
-      const tracksObj = getTracks(artistId);
-
-      tracksObj.then(tracks => {
-        //image set
-        const firstSongImg = document.querySelector(`.first`);
-        firstSongImg.setAttribute("src", tracks[0].album.images[0].url);
-
-        const secondSongImg = document.querySelector(`.second`);
-        secondSongImg.setAttribute("src", tracks[1].album.images[0].url);
-
-        const thirdSongImg = document.querySelector(`.last`);
-        thirdSongImg.setAttribute("src", tracks[2].album.images[0].url);
-        //text set
-        const firstSongTxt = document.querySelector(`#song-fi-searched`);
-        firstSongTxt.textContent = trimToMaxLength(tracks[0].name, 11);
-
-        const secondSongTxt = document.querySelector(`#song-sec-searched`);
-        secondSongTxt.textContent = trimToMaxLength(tracks[1].name, 11);
-
-        const thirdSongTxt = document.querySelector(`#song-thi-searched`);
-        thirdSongTxt.textContent = trimToMaxLength(tracks [2].name, 11);
-        //duration set
-        const firstSongTime = document.querySelector(`#duration-fi-searched`);
-        firstSongms = tracks[0].duration_ms;
-        firstSongTime.textContent = new Date(firstSongms).toISOString().slice(15, 19);
-
-        const secondSongTime = document.querySelector(`#duration-sec-searched`);
-        secondSongms = tracks[1].duration_ms;
-        secondSongTime.textContent = new Date(secondSongms).toISOString().slice(15, 19);
-
-        const thirdSongTime = document.querySelector(`#duration-thi-searched`);
-        thirdSongms = tracks[2].duration_ms;
-        thirdSongTime.textContent = new Date(thirdSongms).toISOString().slice(15, 19);
-      })
-      .catch(e=>{
-          console.log(`Errore nella promise di tipo ${e}`);
-      });
-    };
-  };
-  getSearchedArtist();
+// Event Listeners
+document.querySelector(`.getartist`).addEventListener('submit', (event) => {
+  event.preventDefault();
+  searchArtist();
 });
+
+// Initialization
+window.onload = async () => {
+  await fetchAndPrintArtists();
+};
+
