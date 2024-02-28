@@ -141,6 +141,10 @@ const searchArtist = async () => {
 
       const tracks = await fetchTopTracks(artist.id);
 
+      setArtistImage(`album-fi-searched`, tracks[0].album.images[0].url);
+      setArtistImage(`album-sec-searched`, tracks[1].album.images[0].url);
+      setArtistImage(`album-thi-searched`, tracks[2].album.images[0].url);
+
       printSongInfo('song-fi-searched', trimToMaxLength(tracks[0].name, 11));
       printSongInfo('song-sec-searched', trimToMaxLength(tracks[1].name, 11));
       printSongInfo('song-thi-searched', trimToMaxLength(tracks[2].name, 11));
