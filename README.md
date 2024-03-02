@@ -1,10 +1,10 @@
 # SpotyCards - Trasform the way we see links!
-Introducing GoShort – your ultimate destination for hassle-free **URL shortening!** With the power of __Rebrand.ly's__ RESTful API, GoShort empowers users like **you** to effortlessly create personalized and branded shortened links in just a **few clicks**.
+
+Introducing SpotyCard – your **premier** platform for seamless artist discovery! Harnessing the dynamic capabilities of Spotify's RESTful APIs, SpotyCard enables users like __yourself__ to effortlessly generate **personalized artist cards** featuring their top 3 most played tracks. Say goodbye to the hassle of extensive searches and hello to **instant access** to your favorite artists' top hits. **Discover, listen, and share** your musical passions with __SpotyCard__ in just a few clicks!
 
 ## Table of contents 🗃
 
 - [Overview](#overview)
-  - [The challenge](#the-challenge)
   - [Screenshot](#screenshot)
   - [Links](#links)
 - [My process](#my-process)
@@ -15,30 +15,21 @@ Introducing GoShort – your ultimate destination for hassle-free **URL shorteni
 
 ## Overview
 
+While delving into the power of RESTful APIs through a FreeCodeCamp video, inspiration struck, leading to the conception of a sleek web app idea: spotlighting the top 7 artists in a specific Spotify market and facilitating user queries for detailed artist information displayed within elegant cards. Drawing inspiration from CSStricks' card layout, I successfully replicated its effect with my own twist, resulting in a stunning visual presentation. Initially grappling with JavaScript during the project's inception due to being in the learning phase, some code segments were redundant and lacked full reliability to the functional paradigm, after a few months i refactored the JS and empowered my web app.
+
 ### Screenshot 📷
 
 ## Desktop Layout 💻
 
-![](./images/GoShort_desktop.png)
+![](./img/SpotyCard_image.png)
 
 ## Mobile Layout 📱
 
 ![](./images/GoShort_mobile.gif)
 
-### The challenge 🎯
-
-Users should be able to:
-
-- View the optimal layout for the site depending on their device's screen size
-- Shorten any valid URL
-- See a list of their shortened links
-- Copy the shortened link to their clipboard in a single click
-- Receive an error message when the `form` is submitted if:
-  - The `input` field is empty
-
 ### Links 🔗
 
-- Live Site URL: [GOShort Live Link](https://carvso.github.io/SpotyCard/)
+- Live Site URL: [SpotyCard Live Link](https://carvso.github.io/SpotyCard/)
 
 ## My process
 
@@ -47,117 +38,83 @@ Users should be able to:
 - Semantic HTML5 markup
 - CSS custom properties
 - Flexbox
+- Flexbox Grid
 - Mobile-first workflow
 - Vanilla JavaScript
 
 ### What I learned 📚
 
-To realize this project i first started to look at the design that i was imagening and converted it into figma draft. The hero image was also realized by me into figma using an image generated via "blush" and vector image of a cutting url and some vectors to add movement to the image.
-Then, I started building the skeleton of the web application, the HTML, and added css styling.The major things I've learnt during this project for the css part are:
-```css
-.opacity:hover{
-    opacity: .5;
-}
-```
-Added an opacity class, targetting the pseudo class ":hover" to change opacity when hovering the btns.
+How the Spotify API's work?
+In RESTful APIs like Spotify's, resources are represented as URIs (Uniform Resource Identifiers), and the actions you can perform on those resources are communicated via standard HTTP methods (such as GET, POST, PUT, DELETE).
+To get an access token, you typically need to register your application with Spotify and obtain client credentials (client ID and client secret). You then use these credentials to request an access token by sending a POST request to the Spotify Accounts service with your client credentials and the appropriate scopes. If the request is successful, Spotify will respond with an access token.
 
-But i also learnt how to set an element with position absolute fixed to its relative parent, for example to fix an image relatively to the hero section like this:
-
-```css
-.blue-line{     /* <-- child element */
-    border: .2em solid var(--WowBlue);
-    width: 70%;
-    position: absolute;
-    bottom: 7em;
-}
-.about-cards{   /* <-- parent element */
-    display: flex;
-    gap: 2em;
-    position: relative;
-}
-```
-Another trick I've learnt, is relatively to mobile responsiveness: if you give at the html (absolute parent) a font size of 50%, the layout will automatically fit in your content even for mobile users, making it responsive
-
-```css
-@media (max-width: 879px){
-    html{
-        font-size: 50%;
-    }
-}
-``` 
-
-For the JavaScript part, I created a function that validates the inputs, as I did with my prev. project **AgeCalculator App**:
-```js
-const validateInputs = () => {
-    const urlValue = url.value;
-    const slashtagValue = slashtag.value;
-    
-    if(urlValue === '') {
-        setError(url, 'Questo campo è necessario');
-    }
-    else {
-        setSuccess(url);
-    }
-
-    if(slashtagValue === '') {
-        setError(slashtag, 'Questo campo è necessario');
-    }
-    else {
-        setSuccess(slashtag);
-    }
-};
-const setError = (element, message) => {
-    element.placeholder = message;
-    element.value = "";
-};  
-const setSuccess = (element) => {
-    element.placeholder = "Successful";
-    element.placeholder = "Shorten";
-}; 
-```
-
-Then, I needed to make a fetch post request to the __Rebrand.ly__ API's in order to get me returned an object which containes the shortened link and other parameters, that, for the purpose of this app, are no needed.
-To achieve this, i created an __async__ function named **dataFetch**:
+In order to make this reliable and foresee any expiration of the **AuthToken**, every time that the window loads, we call our __fetchAccessToken__ thanks to the execution of **await** function __fetchAndPrintArtists()__
 
 ```js
-const headers = {
-  'Content-Type': 'application/json',
-  'apikey': API_KEY,
-};
+const fetchAccessToken = async () => {
+  const tokenUrl = "https://accounts.spotify.com/api/token";
+  const tokenData = {
+    grant_type: "client_credentials",
+    client_id: clientId,
+    client_secret: clientSecret,
+  };
 
-async function dataFetch(){
-    const data = {
-        destination: url.value,     //<-- input tag
-        slashtag: slashtag.value,   //<-- input tag
-        domain: {
-          fullName: ''              //<-- empty because we are going to use rebrandly domain
-        }
-    }
-    const response = await fetch(API_URL, {
-        method: 'POST',   
-        headers: headers,
-        body: JSON.stringify(data)  //<-- It converts JS Object in to strings
+  try {
+    const response = await fetch(tokenUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams(tokenData),
     });
-    return response.json();         //<--Used to read and parse the result of the promise  
-}
+    const data = await response.json();
+    accessToken = data.access_token;
+    console.log("New access token:", accessToken);
+  } catch (error) {
+    console.error("Error fetching access token:", error);
+    throw error;
+  }
+};
 ```
-
-I want also to highlight how I managed the needs to update the height of the **about** section every time the new div, **shorten-link-wrapper**, is appended to the DOM tree. I created a function called __addHeightToSection()__ that takes the actual height of the page (in pixels) and then modifies it, adding 150px. The function is then nested inside createShortenLinkElement, and called every time a new shotened link is generated: 
+To display artist info an tracks info, after we received our data from the API, we run a **forEach** for each object contained in __artists__, then we print our artist info, thanks to modular and reusable function, we fetch out artist tracks, and do the same thing with different functions for HTML tracks DOM appending.
+If no artist is found, we refetch our artist token.
 
 ```js
-function addHeightToSection(){
-    const sectionAbout = document.querySelector('.about');
-    const sectionHeight = sectionAbout.offsetHeight; 
+const fetchAndPrintArtists = async () => {
+  try {
+    await fetchAccessToken();
+    const data = await fetchArtists();
 
-    const newSectionHeight = sectionHeight + 150; 
-    sectionAbout.style.height = newSectionHeight + 'px'; 
-}
+    if (data.artists) {
+      data.artists.forEach(async (artist, index) => {
+        printName(`artist-name-${index + 1}`, artist.name);
+        printName(`artist-genre-${index + 1}`, artist.genres[0]);
+        printFollowers(`artist-follow-${index + 1}`, artist.followers.total);
+        setArtistImage(`artist-img-${index + 1}`, artist.images[0].url);
+
+        const tracks = await fetchTopTracks(artist.id);
+
+        setArtistImage(`album-fi-${index + 1}`, tracks[0].album.images[0].url);
+        setArtistImage(`album-sec-${index + 1}`, tracks[1].album.images[0].url);
+        setArtistImage(`album-thi-${index + 1}`, tracks[2].album.images[0].url);
+
+        printSongInfo(`song-fi-${index + 1}`, trimToMaxLength(tracks[0].name, 11));
+        printSongInfo(`song-sec-${index + 1}`, trimToMaxLength(tracks[1].name, 11));
+        printSongInfo(`song-thi-${index + 1}`, trimToMaxLength(tracks[2].name, 11));
+
+        printSongDuration(`duration-fi-${index + 1}`, tracks[0].duration_ms);
+        printSongDuration(`duration-sec-${index + 1}`, tracks[1].duration_ms);
+        printSongDuration(`duration-thi-${index + 1}`, tracks[2].duration_ms);
+      });
+    } else {
+      console.log('No artists found');
+      await fetchAccessToken();
+    }
+  } catch (error) {
+    console.error("Failed to fetch artists:", error);
+  }
+};
 ```
-
-### Continued development 👨‍💻
-
-In future I want to focus more on RESTful APIS to master not only the managing but also the creation of those.
-
 ## Author 👤
 
 - Website - [Vincenzo Caruso](https://www.carvso.me)
