@@ -1,4 +1,4 @@
-# SpotyCards - Trasform the way we see links!
+# SpotyCards - A new Way to look for artists!
 
 Introducing SpotyCard – your **premier** platform for seamless artist discovery! Harnessing the dynamic capabilities of Spotify's RESTful APIs, SpotyCard enables users like __yourself__ to effortlessly generate **personalized artist cards** featuring their top 3 most played tracks. Say goodbye to the hassle of extensive searches and hello to **instant access** to your favorite artists' top hits. **Discover, listen, and share** your musical passions with __SpotyCard__ in just a few clicks!
 
