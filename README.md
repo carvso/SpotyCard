@@ -10,7 +10,6 @@ Introducing SpotyCard – your **premier** platform for seamless artist discover
 - [My process](#my-process)
   - [Built with](#built-with)
   - [What I learned](#what-i-learned)
-  - [Continued development](#continued-development)
 - [Author](#author)
 
 ## Overview
@@ -25,7 +24,7 @@ While delving into the power of RESTful APIs through a FreeCodeCamp video, inspi
 
 ## Mobile Layout 📱
 
-![](./images/GoShort_mobile.gif)
+![](./images/SpotyCard_mobile.gif)
 
 ### Links 🔗
 
