@@ -24,7 +24,7 @@ While delving into the power of RESTful APIs through a FreeCodeCamp video, inspi
 
 ## Mobile Layout 📱
 
-![](./images/SpotyCard_mobile.gif)
+![](./img/SpotyCard_mobile.gif)
 
 ### Links 🔗
 
